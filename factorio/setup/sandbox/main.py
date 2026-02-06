@@ -13,9 +13,13 @@ def ask_llm(prompt: str, max_tokens: int = 200):
         response = client.chat.completions.create(
             model="qwen3-coder",  # or whatever alias/model name your server uses
             messages=[
-                {"role": "system", "content": """You are a precise Python code generator. 
-                Respond with EXACTLY ONE complete, executable Python code variant. 
-                No explanations, no alternatives, no markdown, no comments, no tests—just the raw code."""},
+{"role": "system", "content": """You are a Python code generator. RULES:
+- Output ONLY valid Python code that runs immediately when pasted into Python interpreter
+- NO ``` markdown fences, NO # comments, NO explanations  
+- Include function definition + test call + print(result)
+- Example for "reverse string": def reverse_string(s):return s[::-1];print(reverse_string("hello"))
+EVERY response MUST be directly executable Python ONLY."""}
+,
                 {"role": "user", "content": prompt}
             ],
             max_tokens=max_tokens,
@@ -49,16 +53,22 @@ if __name__ == "__main__":
     result = ask_llm(prompt, max_tokens=200)
     
     if result:
-        # Pipe LLM output to Docker sandbox (secure, ephemeral execution)
+        # Strip markdown code blocks aggressively
+        import re
+        clean_code = re.sub(r'```python|```', '', result).strip()
+        clean_code = re.sub(r'#.*', '', clean_code)  # Remove comments too
+        
+        #print("🧹 Cleaned code:")
+        #print(clean_code)
+        
         import subprocess
-        cmd = [
-            "echo", result, "|", "docker", "run", "--rm", "-i",
-            "--network", "none", "--memory=256m", "--cpus=1",
-            "--read-only", "--user", "1000:1000",
-            "python:3.12-slim", "python", "-"
-        ]
-        proc = subprocess.run(" ".join(cmd), shell=True, capture_output=True, text=True)
-        print("\nDocker sandbox output:")
-        print(proc.stdout)
-        if proc.stderr:
-            print("Errors:", proc.stderr)
+        cmd = ["docker", "run", "--rm", "-i", "--network", "none", 
+               "--memory=256m", "python:3.12-slim", "python", "-"]
+        
+        proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, 
+                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        stdout, stderr = proc.communicate(input=clean_code)
+        
+        print("\n✅ Docker sandbox output:")
+        print(stdout or "No output")
+        if stderr: print("Errors:", stderr)
