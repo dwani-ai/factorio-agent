@@ -1,0 +1,29 @@
+services:
+  codegen:
+    build: 
+      context: .
+      dockerfile: Dockerfile.codegen
+    ports:
+      - "8000:8000"
+    environment:
+      - QWEN_API_KEY=${QWEN_API_KEY}
+      - QWEN_BASE_URL=${QWEN_BASE_URL}
+      - SANDBOX_URL=http://sandbox:8001
+    depends_on:
+      sandbox:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      start_period: 10s
+
+  sandbox:
+    build:
+      context: .
+      dockerfile: Dockerfile.sandbox
+    ports:
+      - "8001:8001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      start_period: 10s
