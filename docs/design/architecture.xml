@@ -1,0 +1,90 @@
+<mxfile host="app.diagrams.net" modified="2026-02-07T13:08:00Z" agent="Perplexity-GPT-5.1" version="24.7.5">
+  <diagram id="arch-diagram" name="Architecture">
+    <mxGraphModel dx="1420" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Client -->
+        <mxCell id="client" value="Client&#10;(curl / Web UI)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#1a73e8;fillColor=#e8f0fe;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="120" width="180" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Codegen Service -->
+        <mxCell id="codegen" value="Codegen Service&#10;(FastAPI)" style="swimlane;rounded=1;whiteSpace=wrap;html=1;strokeColor=#34a853;fillColor=#e6f4ea;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="320" y="80" width="260" height="220" as="geometry"/>
+        </mxCell>
+
+        <!-- Codegen main functions -->
+        <mxCell id="f-codegen-http" value="HTTP API&#10;POST /generate" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="codegen">
+          <mxGeometry x="20" y="40" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-codegen-llm" value="LLM Code Generation&#10;Qwen3-Coder via OpenAI client" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="codegen">
+          <mxGeometry x="20" y="95" width="220" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-codegen-clean" value="Code Normalization&#10;(strip fences, comments)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="codegen">
+          <mxGeometry x="20" y="155" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-codegen-call-sandbox" value="Call Sandbox&#10;POST /execute { code }" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="codegen">
+          <mxGeometry x="20" y="210" width="220" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Sandbox Service -->
+        <mxCell id="sandbox" value="Sandbox Service&#10;(FastAPI)" style="swimlane;rounded=1;whiteSpace=wrap;html=1;strokeColor=#fbbc05;fillColor=#fef7e0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="640" y="80" width="260" height="220" as="geometry"/>
+        </mxCell>
+
+        <!-- Sandbox main functions -->
+        <mxCell id="f-sandbox-http" value="HTTP API&#10;POST /execute" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="sandbox">
+          <mxGeometry x="20" y="40" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-sandbox-sandboxed-exec" value="Sandboxed Execution&#10;Python subprocess" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="sandbox">
+          <mxGeometry x="20" y="95" width="220" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-sandbox-limits" value="Resource Limiting&#10;(CPU, memory, timeouts)" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="sandbox">
+          <mxGeometry x="20" y="155" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="f-sandbox-result" value="Result Aggregation&#10;stdout, stderr, exit_code" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#5f6368;fillColor=#ffffff" vertex="1" parent="sandbox">
+          <mxGeometry x="20" y="210" width="220" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- Infra box (optional, minimal) -->
+        <mxCell id="infra" value="Docker / Host&#10;- codegen container&#10;- sandbox container" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#9aa0a6;fillColor=#f1f3f4" vertex="1" parent="1">
+          <mxGeometry x="80" y="340" width="820" height="90" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: Client <-> Codegen -->
+        <mxCell id="arrow-client-codegen" value="prompt, config" style="endArrow=block;html=1;strokeColor=#1a73e8;fontSize=11" edge="1" parent="1" source="client" target="codegen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow-codegen-client" value="final_answer, logs" style="endArrow=block;html=1;dashed=1;strokeColor=#1a73e8;fontSize=11" edge="1" parent="1" source="codegen" target="client">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrows: Codegen <-> Sandbox -->
+        <mxCell id="arrow-codegen-sandbox" value="{ code }" style="endArrow=block;html=1;strokeColor=#34a853;fontSize=11" edge="1" parent="1" source="codegen" target="sandbox">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="arrow-sandbox-codegen" value="{ stdout, stderr, exit_code }" style="endArrow=block;html=1;dashed=1;strokeColor=#ea4335;fontSize=11" edge="1" parent="1" source="sandbox" target="codegen">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- Keep your previous Data Flow page as-is if you already imported it.
+       If not, you can reuse the earlier Data Flow XML or add a new page later. -->
+  <diagram id="flow-diagram" name="Data Flow">
+    <mxGraphModel dx="1420" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <!-- Minimal placeholder so the file imports cleanly; you can paste your earlier Data Flow page here -->
+        <mxCell id="df-note" value="Add or paste your detailed Data Flow diagram on this page." style="text;align=center;fontSize=14" vertex="1" parent="1">
+          <mxGeometry x="200" y="200" width="400" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

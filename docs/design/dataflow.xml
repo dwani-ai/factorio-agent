@@ -1,0 +1,89 @@
+<mxfile host="app.diagrams.net" modified="2026-02-07T13:17:00Z" agent="Perplexity-GPT-5.1" version="24.7.5">
+  <diagram id="flow-diagram" name="Data Flow">
+    <mxGraphModel dx="1420" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Lifelines: only main actors/services -->
+        <mxCell id="life-client" value="Client" style="swimlane;horizontal=0;startSize=30;rounded=0;strokeColor=#1a73e8;fillColor=#e8f0fe;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="80" y="60" width="120" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-codegen" value="Codegen Service" style="swimlane;horizontal=0;startSize=30;rounded=0;strokeColor=#34a853;fillColor=#e6f4ea;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="280" y="60" width="160" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-llm" value="LLM (Qwen3-Coder)" style="swimlane;horizontal=0;startSize=30;rounded=0;strokeColor=#5f6368;fillColor=#ffffff;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="520" y="60" width="160" height="420" as="geometry"/>
+        </mxCell>
+        <mxCell id="life-sandbox" value="Sandbox Service" style="swimlane;horizontal=0;startSize=30;rounded=0;strokeColor=#fbbc05;fillColor=#fef7e0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="760" y="60" width="160" height="420" as="geometry"/>
+        </mxCell>
+
+        <!-- 1. Client -> Codegen: main API -->
+        <mxCell id="msg1" value="1. POST /generate&#10;{ prompt }" style="endArrow=block;html=1;strokeColor=#1a73e8;fontSize=11" edge="1" parent="1" source="life-client" target="life-codegen">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="140" y="120" as="sourcePoint"/>
+            <mxPoint x="280" y="120" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 2. Codegen -> LLM: generate code -->
+        <mxCell id="msg2" value="2. Generate code&#10;chat.completions.create()" style="endArrow=block;html=1;strokeColor=#34a853;fontSize=11" edge="1" parent="1" source="life-codegen" target="life-llm">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="170" as="sourcePoint"/>
+            <mxPoint x="520" y="170" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 3. LLM -> Codegen: Python code -->
+        <mxCell id="msg3" value="3. Return Python code" style="endArrow=block;html=1;dashed=1;strokeColor=#5f6368;fontSize=11" edge="1" parent="1" source="life-llm" target="life-codegen">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="210" as="sourcePoint"/>
+            <mxPoint x="360" y="210" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 4. Codegen: normalize code (main function) -->
+        <mxCell id="msg4" value="4. Normalize code&#10;(clean Python)" style="endArrow=open;dashed=1;html=1;strokeColor=#34a853;fontSize=11" edge="1" parent="1" source="life-codegen" target="life-codegen">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="250" as="sourcePoint"/>
+            <mxPoint x="360" y="270" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 5. Codegen -> Sandbox: execute -->
+        <mxCell id="msg5" value="5. POST /execute&#10;{ code }" style="endArrow=block;html=1;strokeColor=#34a853;fontSize=11" edge="1" parent="1" source="life-codegen" target="life-sandbox">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="310" as="sourcePoint"/>
+            <mxPoint x="760" y="310" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 6. Sandbox: sandboxed execution (main function) -->
+        <mxCell id="msg6" value="6. Sandboxed execution&#10;(Python subprocess + limits)" style="endArrow=open;dashed=1;html=1;strokeColor=#fbbc05;fontSize=11" edge="1" parent="1" source="life-sandbox" target="life-sandbox">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="340" as="sourcePoint"/>
+            <mxPoint x="840" y="360" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 7. Sandbox -> Codegen: result -->
+        <mxCell id="msg7" value="7. Return result&#10;{ stdout, stderr }" style="endArrow=block;html=1;dashed=1;strokeColor=#ea4335;fontSize=11" edge="1" parent="1" source="life-sandbox" target="life-codegen">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="390" as="sourcePoint"/>
+            <mxPoint x="360" y="390" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- 8. Codegen -> Client: final response -->
+        <mxCell id="msg8" value="8. Respond&#10;{ final_answer, code, logs }" style="endArrow=block;html=1;dashed=1;strokeColor=#1a73e8;fontSize=11" edge="1" parent="1" source="life-codegen" target="life-client">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="430" as="sourcePoint"/>
+            <mxPoint x="140" y="430" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
