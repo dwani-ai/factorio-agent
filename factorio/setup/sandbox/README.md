@@ -9,8 +9,8 @@ QWEN_BASE_URL=your-endpoint
 EOF
 
 # Clean start
-docker-compose down -v
-docker-compose up --build -d
+docker compose down -v
+docker compose up --build -d
 
 # Test
 curl -X POST http://localhost:8000/generate \

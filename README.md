@@ -6,11 +6,12 @@ sandbox for code agents
 
  ![how many r in strawberry ? ](docs/images/sandbox_example.jpeg "how many r in strawberry ? ")
 
+---
+---
 
-- Architecture 
+Architecture Diagram
 
- ![Architecture ](docs/images/sandbox-Architecture.jpg "Architecture ")
-
+```ascii
 ┌─────────────┐       POST /generate       ┌─────────────────┐
 │    Client   │ ──────────────────────────▶│ Codegen Service │
 │ (curl/UI)   │                            │   (FastAPI)     │
@@ -32,10 +33,14 @@ sandbox for code agents
                                             │ stdout/stderr
                                             └─────────────────┘
 
+```
 
 ---
 
+Data flow diagram
 
+
+```ascii
                     Data Flow: "How many r in strawberry?"
 
 ┌─────────────────┐  1. POST /generate     ┌──────────────────┐
@@ -93,4 +98,4 @@ sandbox for code agents
                                            │ └──────────────┘ │
                                            └──────────────────┘
 
-
+```
