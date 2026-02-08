@@ -1,6 +1,10 @@
 Claude Code
 
 
+https://github.com/QwenLM/qwen-code
+
+
+
 https://code.claude.com/docs/en/setup 
 
 Use qwen3-coder for work
