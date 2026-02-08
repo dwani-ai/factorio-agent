@@ -1,5 +1,8 @@
 Claude Code
 
+
+https://code.claude.com/docs/en/setup 
+
 Use qwen3-coder for work
 
 export ANTHROPIC_BASE_URL=http://localhost:8080/v1
