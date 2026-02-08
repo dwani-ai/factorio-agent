@@ -23,9 +23,11 @@ With the stack running, open the App Builder UI:
 
   http://localhost:7860
 
-The app-builder service calls the codegen API; set `CODEGEN_URL` if codegen runs elsewhere. To run the UX only (codegen on host):
+The app-builder service calls the codegen API; set `CODEGEN_URL` and `SANDBOX_URL` if they run elsewhere. Mini-apps are persisted to `app_builder/apps.json` (override with `APPS_JSON_PATH`). For Docker persistence, mount a volume and set `APPS_JSON_PATH` (e.g. `-e APPS_JSON_PATH=/data/apps.json` and mount `/data`).
 
-  cd app_builder && pip install -r requirements.txt && CODEGEN_URL=http://localhost:8000 uvicorn main:app --host 0.0.0.0 --port 7860
+To run the UX only (codegen on host):
+
+  cd app_builder && pip install -r requirements.txt && CODEGEN_URL=http://localhost:8000 SANDBOX_URL=http://localhost:8001 uvicorn main:app --host 0.0.0.0 --port 7860
 
 - Standalone
 

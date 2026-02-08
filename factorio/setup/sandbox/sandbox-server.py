@@ -17,7 +17,7 @@ def sandboxed_exec(code: str):
     
     # Set resource limits BEFORE subprocess
     resource.setrlimit(resource.RLIMIT_CPU, (2, 2))      # 2 CPU seconds
-    resource.setrlimit(resource.RLIMIT_AS, (128 * 1024**3, 128 * 1024**3))  # 128MB
+    resource.setrlimit(resource.RLIMIT_AS, (128 * 1024**2, 128 * 1024**2))  # 128MB
     resource.setrlimit(resource.RLIMIT_FSIZE, (1024**2, 1024**2))           # 1MB files
     resource.setrlimit(resource.RLIMIT_NPROC, (10, 10))                     # 10 processes
     
