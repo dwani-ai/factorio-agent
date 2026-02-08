@@ -36,6 +36,7 @@ services:
       - "7860:7860"
     environment:
       - CODEGEN_URL=http://codegen:8000
+      - SANDBOX_URL=http://sandbox:8001
     depends_on:
       codegen:
         condition: service_healthy
