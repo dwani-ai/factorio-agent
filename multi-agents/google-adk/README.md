@@ -1,44 +1,72 @@
-Multi Agent System with Google ADK
+# Multi-Agent System with Google ADK
 
+This directory contains examples and runnable agents built with [Google's Agent Development Kit (ADK)](https://github.com/GoogleCloudPlatform/devrel-demos), using LiteLLM for model inference (e.g. local or custom endpoints).
 
-- 
-python3.10 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+## Prerequisites
 
-Add to .env file 
+- **Python 3.10**
+- An AI inference endpoint (local or remote) compatible with LiteLLM
 
-LITELLM_MODEL_NAME="openai/gemma3" 
+## Setup
 
-LITELLM_API_BASE="https://qwen-api"
+1. **Create and activate a virtual environment:**
 
-LITELLM_API_KEY="sk-dummy"
+   ```bash
+   python3.10 -m venv venv
+   source venv/bin/activate   # On Windows: venv\Scripts\activate
+   ```
 
+2. **Install dependencies:**
 
-- check AI inference
-adk run test_api 
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#6
-- adk run travel-planner-sub-agents
+3. **Configure environment** — create a `.env` file in this directory (or in each agent subdirectory as needed) with your model settings:
 
+   ```env
+   LITELLM_MODEL_NAME="openai/gemma3"
+   LITELLM_API_BASE="https://qwen-api"
+   LITELLM_API_KEY="sk-dummy"
+   ```
 
-- https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#9
-- adk run sequence_agents
+   Adjust `LITELLM_MODEL_NAME`, `LITELLM_API_BASE`, and `LITELLM_API_KEY` for your inference server.
 
+## Verify AI inference
 
-- https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#10
+From this directory (with `venv` activated):
 
-- adk run loop-agent
+```bash
+adk run test_api
+```
 
----
+This runs the `test_api` agent and confirms that the ADK can reach your model via LiteLLM.
 
+## Example agents
+
+Each example corresponds to a section in the [Google codelab: Build a multi-agent system with ADK](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#0).
+
+| Example | Command | Codelab section |
+|--------|--------|------------------|
+| **Travel planner (sub-agents)** | `adk run travel-planner-sub-agents` | [§6 – Sub-agents](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#6) |
+| **Sequence agents** | `adk run sequence_agents` | [§9 – Sequence](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#9) |
+| **Loop agent** | `adk run loop-agent` | [§10 – Loop](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#10) |
+
+Run any of the above from this directory after setup.
+
+## Web UI
+
+To use the ADK web interface for running and inspecting agents:
+
+```bash
 adk web
+```
 
+## References
 
+- **Codelab:** [Production-ready AI with Google Cloud – Build a multi-agent system with ADK](https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#0)
+- **Source repo (Google DevRel demos):**
 
-https://codelabs.developers.google.com/codelabs/production-ready-ai-with-gc/3-developing-agents/build-a-multi-agent-system-with-adk#0
-
-
-https://github.com/GoogleCloudPlatform/devrel-demos.git
-
-git clone --depth 1 https://github.com/GoogleCloudPlatform/devrel-demos.git devrel-demos-multiagent-lab
+  ```bash
+  git clone --depth 1 https://github.com/GoogleCloudPlatform/devrel-demos.git devrel-demos-multiagent-lab
+  ```
