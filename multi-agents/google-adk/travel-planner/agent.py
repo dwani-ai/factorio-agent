@@ -72,6 +72,11 @@ root_agent = Agent(
         - If the user ALREADY has a country in mind,
           delegate to the `attractions_planner` sub-agent
           to list attractions in that country.
+
+        - If they need help deciding, send them to 'travel_brainstormer'.
+        
+        - If they know what country they'd like to visit, send them to the 'attractions_planner'.
+
         """,
     generate_content_config=types.GenerateContentConfig(
         temperature=0,
