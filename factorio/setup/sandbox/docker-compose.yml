@@ -3,6 +3,8 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.codegen
+    restart: unless-stopped
+
     ports:
       - "8000:8000"
     environment:
@@ -23,6 +25,8 @@ services:
       dockerfile: Dockerfile.sandbox
     ports:
       - "8001:8001"
+    restart: unless-stopped
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 30s
@@ -34,6 +38,7 @@ services:
       dockerfile: Dockerfile.app_builder
     ports:
       - "7860:7860"
+    restart: unless-stopped
     environment:
       - CODEGEN_URL=http://codegen:8000
       - SANDBOX_URL=http://sandbox:8001
