@@ -16,14 +16,16 @@ from google import genai
 
 load_dotenv()
 
-# Create a single client; it will read GOOGLE_API_KEY from env by default
-# or you can pass it explicitly as: genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
-client = genai.Client()
 
-GEMINI_MODEL = "gemini-2.5-flash-lite"  # or "models/gemini-2.5-flash-lite" depending on your setup
+import os
+from google.adk.models.lite_llm import LiteLlm
 
-# You generally do NOT pass the client into Agent; you pass the model name.
-# The google-adk framework will use the configured SDK/client under the hood.
+# ADK's LiteLLM wrapper reads specific env vars, but explicit config is safer for local models
+MODEL = LiteLlm(
+    model=os.getenv("LITELLM_MODEL_NAME"),          # ← changed from model_name
+    api_base=os.getenv("LITELLM_API_BASE"),
+    api_key=os.getenv("LITELLM_API_KEY"),
+)
 
 
 # Tools (add the tool here when instructed)
@@ -34,7 +36,7 @@ GEMINI_MODEL = "gemini-2.5-flash-lite"  # or "models/gemini-2.5-flash-lite" depe
 
 attractions_planner = Agent(
     name="attractions_planner",
-    model=GEMINI_MODEL,
+    model=MODEL,
     description="Build a list of attractions to visit in a country.",
     instruction="""
         - Provide the user options for attractions to visit within their selected country.
@@ -43,7 +45,7 @@ attractions_planner = Agent(
 
 travel_brainstormer = Agent(
     name="travel_brainstormer",
-    model=GEMINI_MODEL,
+    model=MODEL,
     description="Help a user decide what country to visit.",
     instruction="""
         Provide a few suggestions of popular countries for travelers.
@@ -58,7 +60,7 @@ travel_brainstormer = Agent(
 
 root_agent = Agent(
     name="steering",
-    model=GEMINI_MODEL,
+    model=MODEL,
     description="Start a user on a travel adventure.",
     instruction="""
         Ask the user if they know where they'd like to travel

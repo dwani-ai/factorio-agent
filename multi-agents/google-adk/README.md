@@ -6,6 +6,15 @@ python3.10 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
+
+LITELLM_MODEL_NAME="openai/gemma3" 
+LITELLM_API_BASE="https://qwen-api"
+LITELLM_API_KEY="sk-dummy"
+
+
+- check AI inference
+adk run test_api 
+
 adk run starter-agents
 
 
