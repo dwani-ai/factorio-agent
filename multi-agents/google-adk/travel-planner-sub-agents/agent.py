@@ -29,6 +29,28 @@ MODEL = LiteLlm(
 
 
 # Tools (add the tool here when instructed)
+def save_attractions_to_state(
+tool_context: ToolContext,
+attractions: List[str]
+) -> dict[str, str]:
+    """Saves the list of attractions to state["attractions"].
+
+    Args:
+        attractions [str]: a list of strings to add to the list of attractions
+
+    Returns:
+        None
+    """
+    # Load existing attractions from state. If none exist, start an empty list
+    existing_attractions = tool_context.state.get("attractions", [])
+
+    # Update the 'attractions' key with a combo of old and new lists.
+    # When the tool is run, ADK will create an event and make
+    # corresponding updates in the session's state.
+    tool_context.state["attractions"] = existing_attractions + attractions
+
+    # A best practice for tools is to return a status message in a return dict
+    return {"status": "success"}
 
 
 
@@ -40,7 +62,12 @@ attractions_planner = Agent(
     description="Build a list of attractions to visit in a country.",
     instruction="""
         - Provide the user options for attractions to visit within their selected country.
+        - When they reply, use your tool to save their selected attraction and then provide more possible attractions.
+        - If they ask to view the list, provide a bulleted list of { attractions? } and then suggest some more.
+
         """,
+    tools=[save_attractions_to_state]
+
 )
 
 travel_brainstormer = Agent(

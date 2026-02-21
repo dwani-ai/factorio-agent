@@ -1,4 +1,5 @@
 node_modules/
+movie_pitches/
 chroma_db/
 cpu-venv
 # Byte-compiled / optimized / DLL files
