@@ -1,6 +1,6 @@
-# Factorio Agent
+# Agents and Recipes
 
-Experiments and recipes for AI agents: multi-agent systems, code-execution sandboxes, and an agentic system for playing Factorio.
+Experiments and recipes for AI agents: multi-agent systems, code-execution sandboxes, and an agentic system for playing Factorio/Polytopia.
 
 ## What's in this repo
 
